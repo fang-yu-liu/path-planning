@@ -75,6 +75,11 @@ void Path_Planner::update(json &j) {
   (7) car's d position in frenet coordinates
   */
   this->sensor_fusion_ = j[1]["sensor_fusion"];
+
+  this->previous_path_x_ = j[1]["previous_path_x"];
+  this->previous_path_y_ = j[1]["previous_path_y"];
+  this->end_path_s_ = j[1]["end_path_s"];
+  this->end_path_d_ = j[1]["end_path_d"];
 }
 
 vector<vector<double>> Path_Planner::path_planning() {
@@ -194,10 +199,10 @@ vector<vector<double>> Path_Planner::generate_spline_trajectory(string next_stat
   int new_lane = this->current_lane_ + this->lane_direction_[next_state];
   map<string, vector<double>> map = this->map_;
 
-  int prev_size = vehicle.previous_path_x_.size();
+  int prev_size = this->previous_path_x_.size();
 
   if (prev_size > 0) {
-    vehicle.car_s_ = vehicle.end_path_s_;
+    vehicle.car_s_ = this->end_path_s_;
   }
 
   vector<double> ptsx;
@@ -219,11 +224,11 @@ vector<vector<double>> Path_Planner::generate_spline_trajectory(string next_stat
     ptsy.push_back(prev_car_y);
     ptsy.push_back(vehicle.car_y_);
   } else {
-    ref_x = vehicle.previous_path_x_[prev_size-1];
-    ref_y = vehicle.previous_path_y_[prev_size-1];
+    ref_x = this->previous_path_x_[prev_size-1];
+    ref_y = this->previous_path_y_[prev_size-1];
 
-    double prev_ref_x = vehicle.previous_path_x_[prev_size-2];
-    double prev_ref_y = vehicle.previous_path_y_[prev_size-2];
+    double prev_ref_x = this->previous_path_x_[prev_size-2];
+    double prev_ref_y = this->previous_path_y_[prev_size-2];
     ref_yaw = atan2(ref_y-prev_ref_y, ref_x-prev_ref_x);
 
     ptsx.push_back(prev_ref_x);
@@ -300,8 +305,8 @@ vector<vector<double>> Path_Planner::generate_spline_trajectory(string next_stat
   vector<double> next_y_vals;
 
   for (int i = 0; i < prev_size; i++) {
-    next_x_vals.push_back(vehicle.previous_path_x_[i]);
-    next_y_vals.push_back(vehicle.previous_path_y_[i]);
+    next_x_vals.push_back(this->previous_path_x_[i]);
+    next_y_vals.push_back(this->previous_path_y_[i]);
   }
 
   double target_x = 30.0;

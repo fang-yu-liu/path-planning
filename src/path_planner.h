@@ -7,6 +7,8 @@
 #include <utility>
 #include "vehicle.h"
 #include "json.hpp"
+#include "helper_functions.h"
+#include "spline/spline.h"
 
 using namespace std;
 
@@ -14,15 +16,23 @@ class Path_Planner {
 public:
 
   map<string, int> lane_direction_ = {{"LCL", -1}, {"LCR", 1}};
+
   string current_state_ = "KL";
-  int total_num_lanes_;
   int current_lane_;
+
+  int total_num_lanes_;
   double desired_speed_; //m/s
   double ref_speed_; //m/s
   double max_acceleration_;
   double max_s_;
+
+  nlohmann::basic_json<> previous_path_x_;
+  nlohmann::basic_json<> previous_path_y_;
+  double end_path_s_;
+  double end_path_d_;
   nlohmann::basic_json<> sensor_fusion_;
   map<string, vector<double>> map_;
+
   Vehicle vehicle_;
 
   /**

@@ -22,15 +22,11 @@ void Vehicle::update(json &j){
   double car_speed_mph = j[1]["speed"];
   this->car_speed_ = mph2mps(car_speed_mph);
 
-  this->previous_path_x_ = j[1]["previous_path_x"];
-  this->previous_path_y_ = j[1]["previous_path_y"];
-  this->end_path_s_ = j[1]["end_path_s"];
-  this->end_path_d_ = j[1]["end_path_d"];
-
-  int prev_size = this->previous_path_x_.size();
-
+  nlohmann::basic_json<> previous_path_x_ = j[1]["previous_path_x"];
+  double end_path_s_ = j[1]["end_path_s"];
+  int prev_size = previous_path_x_.size();
   if (prev_size > 0) {
-    this->car_s_ = this->end_path_s_;
+    this->car_s_ = end_path_s_;
   }
 }
 

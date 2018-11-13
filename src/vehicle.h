@@ -1,11 +1,7 @@
 #ifndef VEHICLE_H_
 #define VEHICLE_H_
-#include <string>
-#include <map>
-#include <vector>
 #include "json.hpp"
 #include "helper_functions.h"
-#include "spline/spline.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -21,10 +17,6 @@ public:
   double car_d_;
   double car_yaw_;
   double car_speed_;
-  nlohmann::basic_json<> previous_path_x_;
-  nlohmann::basic_json<> previous_path_y_;
-  double end_path_s_;
-  double end_path_d_;
 
   /**
   * Constructor
