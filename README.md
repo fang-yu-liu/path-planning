@@ -27,7 +27,7 @@ Each waypoint in the list contains [x,y,s,dx,dy] values.
 * s: the distance along the road to get to that waypoint in meters
 * dx, dy: define the unit normal vector pointing outward of the highway loop
 
-The highway's waypoints loop around so the frenet s value, distance along the road, goes from 0 to 6945.554.
+The highway's waypoints loop around so the Frenet s value, distance along the road, goes from 0 to 6945.554.
 
 #### 1.2 Main Car's Localization Data (No Noise)
 
@@ -59,7 +59,7 @@ A list of all other car's attributes on the same side of the road.
 
 ### 2. Code Structure
 * src/main.cpp -  main code that talks to the simulator.
-* src/vehicle.cpp - vehicle class that represents the properties of a vehiclej (data from 1.2 above).
+* src/vehicle.cpp - vehicle class that represents the properties of a vehiclej (data from section 1.2).
 * src/path_planner.cpp - path planner class that handles the algorithm of planning and trajectory generation.
 * src/helper_functions.cpp - helper functions.
 
@@ -69,13 +69,13 @@ The state machine consists of three states: KL (Keep Lane), LCL (Lane Change Lef
 And KL can transition to LCL and LCR while LCL and LCR can only transition back to KL. This is to prevent the vehicle changes lanes too frequently.
 
 The path planner will follow the steps below to determine the best next state:
-1. Determine what the possible successor states (Path_Planner.cpp, line xx-xx).
+1. Determine what the possible successor states (path_planner.cpp, line 158-172).
 
-2. Get surrounding vehicles information from sensor fusion data (Path_planner.cpp, line xx-xx).
+2. Get surrounding vehicles information from sensor fusion data (path_planner.cpp, line 96-110).
 
   This will return the closet vehicle ahead and behind comparing to the car's current location on all lanes within 50 m.  
 
-3. Use a cost function to figure out the best safely executable state (Path_Planner.cpp, line xx-xx).
+3. Use a cost function to figure out the best safely executable state (path_planner.cpp, line 135-156 and line 174-194).
   * Given each possible successor states, calculate the cost based on the following rules:
     * If there are vehicles within the safe ranges on the targeting lane of that state, then consider the state is not safely executable and set the cost to 99.
   (`ahead_safe_distance = 40`, `behind_safe_distance = 30`)
@@ -85,7 +85,7 @@ The path planner will follow the steps below to determine the best next state:
 4. Find the best state with lowest cost. Preferred to stay with the same lane if the cost are the same within different states (aka. KL is the preferred state).
 
 #### 3.3 Trajectory Generation
-The trajectory generator (Path_Planner.cpp, line xx-xx) is basically the same as the one in the course video. The only changes here is how to determine the reference speed for the car to follow.
+The trajectory generator (path_planner.cpp, line 196-342) is basically the same as the one in the course video. The only changes here is how to determine the reference speed for the car to follow.
 * Calculate the new lane the car will be heading using the new state given to the trajectory generator.
 * Get the minimum collision distance from the car ahead on the new lane using sensor fusion data.
 * Determine the speed for the car to follow:
